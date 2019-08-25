@@ -43,5 +43,13 @@
     "typescript": "^3.5.3"
   },
   "license": "MIT",
-  "author": "Alon Niv @oakfang"
+  "author": "Alon Niv @oakfang",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:oakfang/comp-up.git"
+  },
+  "homepage": "https://github.com/oakfang/comp-up",
+  "bugs": {
+    "url": "https://github.com/oakfang/comp-up"
+  }
 }

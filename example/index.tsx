@@ -10,7 +10,7 @@ const appearance = type => ({
 });
 
 const App = () => {
-  const files = useFileList();
+  const [files] = useFileList();
   return (
     <div>
       <h2>Upload:</h2>

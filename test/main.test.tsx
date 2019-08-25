@@ -6,13 +6,14 @@ import { FileUploader, FileProvider, useFileList } from '../src';
 interface TestAppProps {}
 
 const TestApp: React.FC<TestAppProps> = () => {
-  const files = useFileList();
+  const [files, reset] = useFileList();
   return (
     <div>
       <h2>Upload:</h2>
       <FileUploader multiple>
         <button>Pick files</button>
       </FileUploader>
+      {files.length && <button onClick={reset}>Clear files</button>}
       <div>
         {files.map(file => {
           return <img key={file.url} alt={file.name} src={file.url} />;
@@ -30,6 +31,20 @@ function renderApp(props: TestAppProps) {
   );
 }
 
+beforeEach(() => {
+  Reflect.set(window, 'URL', {
+    createObjectURL() {
+      return 'blob:meow';
+    },
+    revokeObjectURL() {
+      //
+    },
+  });
+});
+afterEach(() => {
+  delete window.URL;
+});
+
 test('It renders without breaking', () => {
   renderApp({});
 });
@@ -41,16 +56,6 @@ test('Things that should not be visible are not', () => {
 });
 
 test('File list works', () => {
-  Object.defineProperty(window, 'URL', {
-    value: {
-      createObjectURL() {
-        return 'blob:meow';
-      },
-      revokeObjectURL() {
-        //
-      },
-    },
-  });
   const { getByLabelText, getByAltText, container } = renderApp({});
   const input = getByLabelText(/pick/i);
   fireEvent.change(input, {
@@ -68,6 +73,16 @@ test('File list works', () => {
   expect(container.querySelector('img')).toBeNull();
 });
 
-afterEach(() => {
-  delete window.URL;
+test('Clear files', () => {
+  const { getByLabelText, queryByAltText, getByText } = renderApp({});
+  const input = getByLabelText(/pick/i);
+  fireEvent.change(input, {
+    target: {
+      files: [new File([''], 'test.txt')],
+    },
+  });
+  expect(queryByAltText('test.txt')).not.toBeNull();
+  const clear = getByText(/clear/i);
+  fireEvent.click(clear, {});
+  expect(queryByAltText('test.txt')).toBeNull();
 });
