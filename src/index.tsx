@@ -16,9 +16,13 @@ export function useFileList(): [FileWithObjectURL[], () => void] {
   const clearFiles = useCallback(() => setFiles([]), [setFiles]);
   const fileList = useMemo(
     () =>
-      files.map((file, index) => {
+      (files as FileWithObjectURL[]).map((file, index) => {
+        const url = urls[index];
+        if (file.url) {
+          return file;
+        }
         return Object.defineProperty(file, 'url', {
-          value: urls[index],
+          value: url,
           enumerable: true,
         }) as FileWithObjectURL;
       }),
