@@ -11,11 +11,11 @@ const TestApp: React.FC<TestAppProps> = () => {
     <div>
       <h2>Upload:</h2>
       <FileUploader multiple>
-        <button>Pick files</button>
+        <div>Pick files</div>
       </FileUploader>
       {files.length && <button onClick={reset}>Clear files</button>}
       <div>
-        {files.map(file => {
+        {files.map((file) => {
           return <img key={file.url} alt={file.name} src={file.url} />;
         })}
       </div>
